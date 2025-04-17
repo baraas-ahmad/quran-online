@@ -1,3 +1,4 @@
+//func get API
 async function getSurahList() {
     const url = 'http://api.alquran.cloud/v1/surah';
     try {
@@ -11,18 +12,21 @@ async function getSurahList() {
     }
 }
 
-function renderSurah(number, name, translation) {
+//template UI Surah
+function setSurahTemplate(number, name, translation) {
     return `${number} - ${name} (${translation})`;
 }
 
-async function renderSurahList() {
+
+//get element list surah
+async function getElementSurahList() {
     try {
         const surahList = await getSurahList();
         console.log('Surah List:', surahList);
 
         let surahElements = '';
         for (let i = 0; i < surahList.length; i++) {
-            surahElements += renderSurah(surahList[i].number, surahList[i].name, surahList[i].englishName) + '<br>';
+            surahElements += setSurahTemplate(surahList[i].number, surahList[i].name, surahList[i].englishName) + '<br>';
         }
         return surahElements;
     } catch (error) {
@@ -30,9 +34,10 @@ async function renderSurahList() {
     }
 }
 
+
 async function renderAll() {
     const app = document.getElementById('app');
-    const renderedSurahList = await renderSurahList();
+    const renderedSurahList = await getElementSurahList();
     app.innerHTML = renderedSurahList;
 }
 
