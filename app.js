@@ -11,16 +11,16 @@ async function getSurahList() {
 }
 
 //template UI Surah
-function setSurahTemplate(number, arabicName, englishName, translation) {
+function setSurahRowTemplate(number, arabicName, englishName, translation) {
     return `
-        <div class="text-lg">
+        <a href="pages/surah.html?number=${number}" class="text-lg hover:text-blue-500 group">
             <div class="flex gap-4">
                 <span class="">${number}.</span> ${arabicName} 
             </div>
-            <div class="flex gap-4 text-gray-500">
+            <div class="flex gap-4 text-gray-500 group-hover:text-blue-500">
                 <span>&nbsp;</span>${englishName} (${translation})
             </div>
-        </div>`;
+        </a>`;
 }
 
 
@@ -30,8 +30,9 @@ async function getElementSurahList() {
         const surahList = await getSurahList();
 
         let surahElements = surahList.map((surah) => {
-            return setSurahTemplate(surah.number, surah.name, surah.englishName, surah.englishNameTranslation);
+            return setSurahRowTemplate(surah.number, surah.name, surah.englishName, surah.englishNameTranslation);
         })
+
         return surahElements.join('');
     } catch (error) {
         return 'Error fetching surah list';
@@ -39,7 +40,7 @@ async function getElementSurahList() {
 }
 
 
-async function renderAll() {
+async function renderSurahList() {
     const app = document.getElementById('app');
     const renderedSurahList = await getElementSurahList();
     app.innerHTML = renderedSurahList;
@@ -47,4 +48,5 @@ async function renderAll() {
 
 
 
-renderAll();
+
+renderSurahList();
