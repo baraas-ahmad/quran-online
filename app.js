@@ -5,16 +5,22 @@ async function getSurahList() {
         const response = await fetch(url);
         const data = await response.json();
         return data.data;
-
-        // console.log('Surah List:', data.data);
     } catch (error) {
         console.error('Error fetching surah list:', error);
     }
 }
 
 //template UI Surah
-function setSurahTemplate(number, name, translation) {
-    return `${number} - ${name} (${translation})`;
+function setSurahTemplate(number, arabicName, englishName, translation) {
+    return `
+        <div class="text-lg">
+            <div class="flex gap-4">
+                <span class="">${number}.</span> ${arabicName} 
+            </div>
+            <div class="flex gap-4 text-gray-500">
+                <span>&nbsp;</span>${englishName} (${translation})
+            </div>
+        </div>`;
 }
 
 
@@ -22,13 +28,11 @@ function setSurahTemplate(number, name, translation) {
 async function getElementSurahList() {
     try {
         const surahList = await getSurahList();
-        console.log('Surah List:', surahList);
 
-        let surahElements = '';
-        for (let i = 0; i < surahList.length; i++) {
-            surahElements += setSurahTemplate(surahList[i].number, surahList[i].name, surahList[i].englishName) + '<br>';
-        }
-        return surahElements;
+        let surahElements = surahList.map((surah) => {
+            return setSurahTemplate(surah.number, surah.name, surah.englishName, surah.englishNameTranslation);
+        })
+        return surahElements.join('');
     } catch (error) {
         return 'Error fetching surah list';
     }
