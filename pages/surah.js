@@ -5,7 +5,7 @@ async function getSurahPage(number) {
     try {
         const response = await fetch(url);
         const data = await response.json();
-        console.log(data.data);
+        console.log('data :', data.data);
         return data.data;
     } catch (error) {
         console.error('Error fetching surah page:', error);
@@ -14,9 +14,9 @@ async function getSurahPage(number) {
 
 function setSurahPageTemplate(data) {
     return `
-        <div>
-            ${data}
-        </div>`
+        <div class="p-6 bg-white text-gray-800 rounded-lg shadow-md text-center 
+        border-b border-gray-400 font-sans">
+        ${data}</div>`
 }
 
 async function renderSurahPage(surahNumber) {
@@ -31,8 +31,9 @@ async function renderSurahPage(surahNumber) {
         let ayahArr = [];
         for (let i = 0; i < ayahs.length; i++) {
             ayahArr.push(setSurahPageTemplate(ayahs[i].text))
-            console.log(ayahs[i]);
+
         }
+        console.log(ayahArr);
 
         surahTitle.innerText = title;
         page.innerHTML = ayahArr.join('');
@@ -44,4 +45,5 @@ async function renderSurahPage(surahNumber) {
 
 
 let surahNumber = location.search.split('number=')[1]
+console.log(location.search.split('number='));
 renderSurahPage(surahNumber);
