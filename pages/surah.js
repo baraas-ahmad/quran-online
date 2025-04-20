@@ -40,10 +40,22 @@ function playAudio() {
     function onended(evt) {
         currentIndex = (currentIndex + 1) % audioArr.length; // increment our index
         audioArr[currentIndex].play(); // play the next sound
+        console.log(currentIndex, "audio index");
     }
 
-    btn.onclick = audioArr[0].play.bind(audioArr[0]);
-    stop.onclick = location.reload.bind(location);
+    btn.onclick = function () {
+        if (audioArr.length > 0) {
+            audioArr[currentIndex].play();
+        }
+    }
+    pause.onclick = function () {
+        audioArr[currentIndex].pause();
+    }
+    stop.onclick = function () {
+        audioArr[currentIndex].pause();
+        audioArr[currentIndex].currentTime = 0; // reset to the beginning
+        currentIndex = 0; // reset the index
+    }
 }
 
 async function renderSurahPage(surahNumber) {
@@ -64,7 +76,6 @@ async function renderSurahPage(surahNumber) {
         surahTitle.innerText = title;
         page.innerHTML = ayahArr.join('');
         playAudio();
-        console.log(currentIndex, "audio index");
     } catch (error) {
 
     }
