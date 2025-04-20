@@ -25,35 +25,41 @@ function setSurahPageTemplate(text, audio) {
         `
 }
 
-let audioArr = [];
-let currentIndex = 0; // keep track of the current index
+// let audioArr = [];
 
-function playAudio() {
-    const btn = document.getElementById('play-button');
+function playAudio(sounds) {
+    let currentIndex = 0; // keep track of the current index
+    const play = document.getElementById('play-button');
     const pause = document.getElementById('pause-button');
     const stop = document.getElementById('stop-button');
 
-    audioArr.forEach(function (sound) {
+    sounds.forEach(function (sound) {
         sound.onended = onended; // add the same event listener for all audios in our array
     });
 
     function onended(evt) {
-        currentIndex = (currentIndex + 1) % audioArr.length; // increment our index
-        audioArr[currentIndex].play(); // play the next sound
+        currentIndex = (currentIndex + 1); // increment our index
+        if (currentIndex >= sounds.length) {
+            currentIndex = 0; // reset to the first sound
+            sounds[0].pause(); // pause the first sound
+            sounds[0].currentTime = 0; // reset to the beginning
+        } else {
+            sounds[currentIndex].play(); // play the next sound
+        }
         console.log(currentIndex, "audio index");
     }
 
-    btn.onclick = function () {
-        if (audioArr.length > 0) {
-            audioArr[currentIndex].play();
+    play.onclick = function () {
+        if (sounds.length > 0) {
+            sounds[currentIndex].play();
         }
     }
     pause.onclick = function () {
-        audioArr[currentIndex].pause();
+        sounds[currentIndex].pause();
     }
     stop.onclick = function () {
-        audioArr[currentIndex].pause();
-        audioArr[currentIndex].currentTime = 0; // reset to the beginning
+        sounds[currentIndex].pause();
+        sounds[currentIndex].currentTime = 0; // reset to the beginning
         currentIndex = 0; // reset the index
     }
 }
@@ -68,6 +74,7 @@ async function renderSurahPage(surahNumber) {
         const ayahs = surah.ayahs;
 
         let ayahArr = [];
+        let audioArr = [];
         for (let i = 0; i < ayahs.length; i++) {
             ayahArr.push(setSurahPageTemplate(ayahs[i].text, ayahs[i].audio))
             audioArr.push(new Audio(ayahs[i].audio));
@@ -75,7 +82,7 @@ async function renderSurahPage(surahNumber) {
 
         surahTitle.innerText = title;
         page.innerHTML = ayahArr.join('');
-        playAudio();
+        playAudio(audioArr);
     } catch (error) {
 
     }
