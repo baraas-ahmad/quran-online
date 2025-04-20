@@ -12,12 +12,6 @@ async function getSurahPage(number) {
     }
 }
 
-//fetch audio API
-async function getAudioSurah(params) {
-    
-}
-
-
 function setSurahPageTemplate(text, audio) {
     return `
         <div class="p-6 bg-white text-gray-800 rounded-lg shadow-md text-center 
@@ -29,6 +23,27 @@ function setSurahPageTemplate(text, audio) {
         </audio>
         </div>
         `
+}
+
+let audioArr = [];
+let currentIndex = 0; // keep track of the current index
+
+function playAudio() {
+    const btn = document.getElementById('play-button');
+    const pause = document.getElementById('pause-button');
+    const stop = document.getElementById('stop-button');
+
+    audioArr.forEach(function (sound) {
+        sound.onended = onended; // add the same event listener for all audios in our array
+    });
+
+    function onended(evt) {
+        currentIndex = (currentIndex + 1) % audioArr.length; // increment our index
+        audioArr[currentIndex].play(); // play the next sound
+    }
+
+    btn.onclick = audioArr[0].play.bind(audioArr[0]);
+    stop.onclick = location.reload.bind(location);
 }
 
 async function renderSurahPage(surahNumber) {
@@ -43,12 +58,13 @@ async function renderSurahPage(surahNumber) {
         let ayahArr = [];
         for (let i = 0; i < ayahs.length; i++) {
             ayahArr.push(setSurahPageTemplate(ayahs[i].text, ayahs[i].audio))
-            
+            audioArr.push(new Audio(ayahs[i].audio));
         }
-        console.log(ayahArr);
 
         surahTitle.innerText = title;
         page.innerHTML = ayahArr.join('');
+        playAudio();
+        console.log(currentIndex, "audio index");
     } catch (error) {
 
     }
