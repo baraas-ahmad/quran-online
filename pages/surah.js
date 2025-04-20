@@ -1,22 +1,34 @@
 // fetch surah page
 async function getSurahPage(number) {
-    const url = `https://api.alquran.cloud/v1/surah/${number}`
+    const url = `https://api.alquran.cloud/v1/surah/${number}/ar.alafasy`
 
     try {
         const response = await fetch(url);
         const data = await response.json();
-        console.log('data :', data.data);
+        console.log('data :', data);
         return data.data;
     } catch (error) {
         console.error('Error fetching surah page:', error);
     }
 }
 
-function setSurahPageTemplate(data) {
+//fetch audio API
+async function getAudioSurah(params) {
+    
+}
+
+
+function setSurahPageTemplate(text, audio) {
     return `
         <div class="p-6 bg-white text-gray-800 rounded-lg shadow-md text-center 
         border-b border-gray-400 font-sans">
-        ${data}</div>`
+        ${text}
+        <audio controls>
+        <source src="${audio}" type="audio/mpeg">
+        Your browser does not support the audio element.
+        </audio>
+        </div>
+        `
 }
 
 async function renderSurahPage(surahNumber) {
@@ -30,8 +42,8 @@ async function renderSurahPage(surahNumber) {
 
         let ayahArr = [];
         for (let i = 0; i < ayahs.length; i++) {
-            ayahArr.push(setSurahPageTemplate(ayahs[i].text))
-
+            ayahArr.push(setSurahPageTemplate(ayahs[i].text, ayahs[i].audio))
+            
         }
         console.log(ayahArr);
 
