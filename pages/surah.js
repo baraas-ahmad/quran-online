@@ -25,12 +25,9 @@ function setSurahPageTemplate(text, audio) {
         `
 }
 
-// let audioArr = [];
-
 function playAudio(sounds) {
     let currentIndex = 0; // keep track of the current index
     const play = document.getElementById('play-button');
-    const pause = document.getElementById('pause-button');
     const stop = document.getElementById('stop-button');
 
     sounds.forEach(function (sound) {
@@ -51,12 +48,14 @@ function playAudio(sounds) {
 
     play.onclick = function () {
         if (sounds.length > 0) {
-            sounds[currentIndex].play();
+            if (sounds[currentIndex].paused) {
+                sounds[currentIndex].play();
+            } else {
+                sounds[currentIndex].pause();
+            }
         }
     }
-    pause.onclick = function () {
-        sounds[currentIndex].pause();
-    }
+
     stop.onclick = function () {
         sounds[currentIndex].pause();
         sounds[currentIndex].currentTime = 0; // reset to the beginning
